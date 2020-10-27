@@ -19,11 +19,19 @@ def product_list_view(request):
 def product_view(request, pk):
     template = 'app/product_detail.html'
     product = get_object_or_404(Product, id=pk)
+    reviews = Review.objects.filter(product=product)
 
-    form = ReviewForm
+    form = ReviewForm(request.POST, product=product)
     if request.method == 'POST':
-        # логика для добавления отзыва
-        pass
+        print('Got POST method')
+        if form.is_valid():
+            print(form)
+            form.save()
+            print('Review is saved')
+        else:
+            print('Form is not valid')
+            print(form.data)
+            error_msg = 'Неверно заполнен отзыв'
 
     context = {
         'form': form,
