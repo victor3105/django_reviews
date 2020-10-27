@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django.shortcuts import redirect, render, get_object_or_404
 from django.urls import reverse
 
@@ -25,13 +26,7 @@ def product_view(request, pk):
     if request.method == 'POST':
         print('Got POST method')
         if form.is_valid():
-            print(form)
             form.save()
-            print('Review is saved')
-        else:
-            print('Form is not valid')
-            print(form.data)
-            error_msg = 'Неверно заполнен отзыв'
 
     context = {
         'form': form,
