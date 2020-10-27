@@ -22,16 +22,24 @@ def product_view(request, pk):
     product = get_object_or_404(Product, id=pk)
     reviews = Review.objects.filter(product=product)
 
-    form = ReviewForm(request.POST or None, product=product)
-    if request.method == 'POST':
-        print('Got POST method')
-        if form.is_valid():
-            form.save()
+    reviewed_items = request.session.get('reviewed_items', [])
+    print(reviewed_items)
 
     context = {
-        'form': form,
         'product': product,
-        'reviews': reviews
+        'reviews': reviews,
+        'is_review_exist': True
     }
+
+    if pk not in reviewed_items:
+        form = ReviewForm(request.POST or None, product=product)
+        context['is_review_exist'] = False
+        context['form'] = form
+        if request.method == 'POST':
+            if form.is_valid():
+                form.save()
+                reviewed_items.append(pk)
+                request.session['reviewed_items'] = reviewed_items
+                return redirect(reverse('product_detail', args=[str(pk)]))
 
     return render(request, template, context)
