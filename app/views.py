@@ -21,7 +21,7 @@ def product_view(request, pk):
     product = get_object_or_404(Product, id=pk)
     reviews = Review.objects.filter(product=product)
 
-    form = ReviewForm(request.POST, product=product)
+    form = ReviewForm(request.POST or None, product=product)
     if request.method == 'POST':
         print('Got POST method')
         if form.is_valid():
@@ -35,7 +35,8 @@ def product_view(request, pk):
 
     context = {
         'form': form,
-        'product': product
+        'product': product,
+        'reviews': reviews
     }
 
     return render(request, template, context)

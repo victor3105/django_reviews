@@ -15,4 +15,4 @@ class Review(models.Model):
     product = models.ForeignKey(Product, related_name='review', on_delete=models.CASCADE)
 
     def __str__(self):
-        return str(self.product.name) + ' ' + self.text[:50]
+        return str(self.text[:50])
